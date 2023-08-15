@@ -14,7 +14,9 @@ export class CreateUserModel implements ICreateUser {
       this.verifyEmail(createUser.email);
       lines.forEach((line) => {
         const [email, password] = line.split(',');
-        users.push({ email, password });
+        if (line !== '') {
+          users.push({ email, password });
+        }
       });
       users.push(createUser);
       const userDataTxt = users
