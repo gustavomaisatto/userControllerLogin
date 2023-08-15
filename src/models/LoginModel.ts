@@ -1,6 +1,7 @@
 import { ILogin, ILoginAtt } from '../interfaces/ILogin';
 import fs from 'fs';
 import path from 'path';
+import { hash, compare } from 'bcrypt';
 export class LoginModel implements ILogin {
   pathFile = path.join(__dirname, '../database/users.txt');
   constructor() {}
@@ -12,13 +13,12 @@ export class LoginModel implements ILogin {
     const line = usersData.split('\n');
     const lineFilter = line.filter((line) => {
       const [email, password] = line.split(',');
-      return email === loginVerify.email && password === loginVerify.password;
+      return email === loginVerify.email;
     });
-    const hasData = lineFilter.length > 0;
-    if (hasData) {
-      return true;
-    } else {
-      return false;
-    }
+    const passwordSplit =
+      lineFilter.length > 0 ? lineFilter[0]?.split(',') : [];
+    return passwordSplit.length > 0
+      ? await compare(loginVerify.password, passwordSplit[1])
+      : false;
   }
 }
