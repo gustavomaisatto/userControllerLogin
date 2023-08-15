@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { LoginController } from './controllers/LoginController';
 import { CreateUserController } from './controllers/CreateUserController';
+import { errorHandler } from './middlewares/errorHandler';
 
 const { PORT, NODE_ENV } = process.env;
 
@@ -18,6 +19,7 @@ export class App {
     this.app.use(express.json());
     this.app.post('/users/login', controllers.userLogin.handleGetLogin);
     this.app.post('/users/create', controllers.userCreate.createUser);
+    this.app.use(errorHandler);
   }
 
   getApp() {
